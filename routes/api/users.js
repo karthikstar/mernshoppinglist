@@ -1,0 +1,75 @@
+// to use express router..
+const express = require('express');
+const router = express.Router();
+const bcrpyt = require('bcryptjs');
+const config = require('config');
+const jwt = require('jsonwebtoken');
+
+// User Model
+const User = require('../../models/User');
+
+// @route   POST api/users
+// @desc   register new user
+// @access  Public 
+// to get directed to this file, client must use 'api/items/'
+router.post('/', (req,res) => {
+    const {name, email, password} = req.body;
+
+    // simple validation
+    if (!name ||!email || !password){
+        return res.status(400).json({msg:'Please enter all fields'})
+    }
+
+    // check for existing user
+    
+    User.findOne({email})
+    .then(user => {
+        if(user) return res.status(400).json({msg : 'User already exists'});
+        
+        const newUser = new User({
+            name,
+            email,
+            password
+        });
+
+        //generate a salt which is used to create a hash from a plain text password
+        //Create Salt & hash
+        // first param of gensalt is no of rounds we want to use , default 10, more the rnds more secure the salt
+        bcrpyt.genSalt(10,(err,salt) => {
+            bcrpyt.hash(newUser.password, salt,(err,hash) => {
+                if(err) throw err;
+                newUser.password = hash; // saving the hash as the new password
+                newUser.save() // gives a promise back
+                    .then(user => {
+                        jwt.sign(
+                            {id:user.id},
+                            config.get('jwtSecret'),
+                            {expiresIn: 3600},
+                            (err,token) => {
+                                if (err) throw err;
+                                res.json({
+                                    token,
+                                    user:{
+                                        id:user.id,
+                                        name:user.name,
+                                        email:user.email
+                                    }
+                                })
+                            }
+                        )
+
+
+                    });
+            })
+        })
+
+
+    })
+});
+
+
+
+module.exports = router;
+
+// to test APIs , we need to use a HTTP client for eg Postman
+

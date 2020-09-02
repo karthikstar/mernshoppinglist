@@ -7,14 +7,14 @@ const mongoose = require('mongoose');
 
 //body parser will allow us to take requests and take data from the body of the request
 
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser'); - not needed in new version of express
 const path = require('path'); // core node js module so dont need to npm install
-const items = require('./routes/api/items');
 
+const config = require('config');
 const app = express(); // initialise express
 
 // BodyParser Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
 // we need a mongodb URI
 // To connect through MongoDB Atlas:
@@ -28,17 +28,18 @@ app.use(bodyParser.json());
 // - Copy Connection String only and paste it in MongoURI in keys.js,
 
 // DB Config
-
-const db = require('./config/keys').mongoURI;
+// now we can get config values via ..
+const db = config.get('mongoURI');
 
 // connect to mongo db
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true}) // this is promise based so can use then, catch statements
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}) // this is promise based so can use then, catch statements
     .then(() => console.log('mongoDB connected...'))
     .catch(err => console.log(err));
 
 // use Routes
-app.use('/api/items', items); // anything that goes to ... / api/items, will be referred to items variable
+app.use('/api/items', require('./routes/api/items')); // anything that goes to ... / api/items, will be referred to items variable
+app.use('/api/users', require('./routes/api/users')); 
 
 // create a postbuild script that once we push to heroku, will automatically make a build there instead of us having to do it and pushing to heroku.
 // Serve static assets if in production
