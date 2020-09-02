@@ -40,6 +40,7 @@ mongoose
 // use Routes
 app.use('/api/items', require('./routes/api/items')); // anything that goes to ... / api/items, will be referred to items variable
 app.use('/api/users', require('./routes/api/users')); 
+app.use('/api/auth', require('./routes/api/auth')); 
 
 // create a postbuild script that once we push to heroku, will automatically make a build there instead of us having to do it and pushing to heroku.
 // Serve static assets if in production
