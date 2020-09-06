@@ -31,6 +31,36 @@ export const loadUser = () => (dispatch, getState) => {
         });
 }
 
+//Register User 
+export const register = ({name,email,password}) => dispatch => {
+    // Headers 
+    const config = {
+        headers : {
+            'Content-Type':'application/json'
+        }
+    }
+    // request body 
+    const body = JSON.stringify({name, email,password})
+
+    axios.post('/api/users',body,config) //post req to tihis endpoint, 2nd param is body, 3rd param is the config which has the headers 
+        .then(res => dispatch({
+            type:REGISTER_SUCCESS,
+            payload:res.data //endpoint returns the user data and token
+        }))
+        .catch(err => {
+            dispatch(
+                returnErrors(err.response.data,err.response.status, 'REGISTER_FAIL')
+            );
+            dispatch({
+                type:REGISTER_FAIL
+            });
+        });
+} 
+
+
+
+
+
 // setup Config/headers and token
 export const tokenConfig = getState => {
      // get token from local storage 
