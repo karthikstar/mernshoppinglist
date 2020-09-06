@@ -13,10 +13,10 @@ function auth (req,res,next){
         // verify token
         const decoded = jwt.verify(token,config.get('jwtSecret'));
         
-        //add user from payload 
+        //add user from payload to req
         req.user = decoded;
         next();
-    
+    // when we are done w this piece of middleware we call next to go to the next middleware
     } catch(e){
         res.status(400).json({msg: 'Token is not valid'});
 

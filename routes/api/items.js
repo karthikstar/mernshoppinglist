@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-
+// for post and delete reqs to be authenticated ^
 
 // Item Model
 const Item = require('../../models/Item');

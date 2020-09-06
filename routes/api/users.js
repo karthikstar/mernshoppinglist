@@ -41,14 +41,15 @@ router.post('/', (req,res) => {
                 newUser.password = hash; // saving the hash as the new password
                 newUser.save() // gives a promise back
                     .then(user => {
-                        jwt.sign(
+                        jwt.sign( // creating a token
+                            //first parameter will be the payload we want to add.
                             {id:user.id},
                             config.get('jwtSecret'),
-                            {expiresIn: 3600},
+                            {expiresIn: 3600}, // token will last for an hr
                             (err,token) => {
                                 if (err) throw err;
                                 res.json({
-                                    token,
+                                    token, // this token we can use to authenticate private routes. can also use passport js middleware to create private routes 
                                     user:{
                                         id:user.id,
                                         name:user.name,
