@@ -18,21 +18,21 @@ router.post('/', (req,res) => {
     // simple validation
     if (!name ||!email || !password){
         return res.status(400).json({msg:'Please enter all fields'})
-    }
+    } //if one of these is missing, return a status 400
 
     // check for existing user
-    
+    // find by email
     User.findOne({email})
     .then(user => {
         if(user) return res.status(400).json({msg : 'User already exists'});
-        
+        //if theres a user return statsus 400. Else create new user
         const newUser = new User({
             name,
             email,
             password
         });
 
-        //generate a salt which is used to create a hash from a plain text password
+        //generate a salt which is used to create a password hash from a plain text password
         //Create Salt & hash
         // first param of gensalt is no of rounds we want to use , default 10, more the rnds more secure the salt
         bcrpyt.genSalt(10,(err,salt) => {

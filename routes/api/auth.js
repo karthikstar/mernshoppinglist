@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrpyt = require('bcryptjs');
 const config = require('config');
 const jwt = require('jsonwebtoken');
-
+const auth = require('../../middleware/auth');
 // User Model
 const User = require('../../models/User');
 
@@ -52,8 +52,14 @@ router.post('/', (req,res) => {
     })
 });
 
-
-
+///@route GET api/auth
+//@desc   Get user data 
+//@access Private
+router.get('/user',auth,(req,res)=> {
+    User.findById(req.user.id)
+    .select('-password') // disregard the password
+    .then(user => res.json(user))
+})
 module.exports = router;
 
 // to test APIs , we need to use a HTTP client for eg Postman
