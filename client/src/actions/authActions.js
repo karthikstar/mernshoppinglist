@@ -10,6 +10,32 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS
 } from "./types";
+// login user
+
+export const login = ({email,password}) => dispatch => {
+    // Headers 
+    const config = {
+        headers : {
+            'Content-Type':'application/json'
+        }
+    }
+    // request body 
+    const body = JSON.stringify({email,password})
+
+    axios.post('/api/auth',body,config) //post req to tihis endpoint, 2nd param is body, 3rd param is the config which has the headers 
+        .then(res => dispatch({
+            type:LOGIN_SUCCESS,
+            payload:res.data //endpoint returns the user data and token
+        }))
+        .catch(err => {
+            dispatch(
+                returnErrors(err.response.data,err.response.status, 'LOGIN_FAIL')
+            );
+            dispatch({
+                type:LOGIN_FAIL
+            });
+        });
+};
 
 // LOGOUT user 
 export const logout = () => {
@@ -62,7 +88,7 @@ export const register = ({name,email,password}) => dispatch => {
                 type:REGISTER_FAIL
             });
         });
-} 
+};
 
 
 
