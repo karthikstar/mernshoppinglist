@@ -11,6 +11,13 @@ import {
     REGISTER_SUCCESS
 } from "./types";
 
+// LOGOUT user 
+export const logout = () => {
+    return {
+        type: LOGOUT_SUCCESS
+    };
+};
+
 // Check token & load user
 
 export const loadUser = () => (dispatch, getState) => {
