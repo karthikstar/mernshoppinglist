@@ -1,4 +1,0 @@
-{
-    "mongoURI":"mongodb+srv://karthikstar:karthik2000@shoppinglistbackend.6f8rx.mongodb.net/shoppinglistbackend?retryWrites=true&w=majority",
-    "jwtSecret":"sl_myJwtSecret"
-}
